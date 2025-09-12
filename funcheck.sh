@@ -4,8 +4,10 @@ BINARY="$1"
 FUNC_RAW="$2"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_FILES_DIR="$SCRIPT_DIR/configs/"
-MLX_BINS=("fractol" "so_long" "fdf")
+MLX_BINS=("fractol" "fractol_bonus" "so_long" "so_long_bonus" "fdf" "fdf_bonus")
+FREE_BONUS_BINS=("fdf_bonus" "so_long_bonus")
 IS_MLX_PROJECT=0
+IS_FREE_BONUS=0
 MLX_WARNING=""
 MLX_IGNORE=""
 
@@ -49,6 +51,13 @@ for mlx_bin in "${MLX_BINS[@]}"; do
   fi
 done
 
+for free_bin in "${FREE_BONUS_BINS[@]}"; do
+  if [[ "$BIN_NAME" == "$free_bin" ]]; then
+    IS_FREE_BONUS=1
+    break
+  fi
+done
+
 # Use objdump to extract every library function call in the binary
 USED=$(objdump -T "$BINARY" \
   | grep '\*UND\*' \
@@ -81,8 +90,12 @@ for func in $USED; do
   fi
   # Check if the current function is in the allowed functions list or not
   if ! echo "$ALLOWED" | grep -qx "$func"; then
-    echo "${RED}❌ Function found: $func${RESET}"
-    status=1
+    if [[ $IS_FREE_BONUS -eq 1 ]]; then
+      echo "${YELLOW} Warning: $func found. It's use must be properly justified in this project!"
+    else
+      echo "${RED}❌ Function found: $func${RESET}"
+      status=1
+    fi
   else
     echo "${GREEN}✅ Function found: $func${RESET}"
   fi
