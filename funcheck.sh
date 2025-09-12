@@ -91,7 +91,7 @@ for func in $USED; do
   # Check if the current function is in the allowed functions list or not
   if ! echo "$ALLOWED" | grep -qx "$func"; then
     if [[ $IS_FREE_BONUS -eq 1 ]]; then
-      echo "${YELLOW} Warning: $func found. It's use must be properly justified in this project!"
+      echo "${YELLOW}⚠️ Warning: $func found. It's use must be properly justified in this project!"
     else
       echo "${RED}❌ Function found: $func${RESET}"
       status=1
