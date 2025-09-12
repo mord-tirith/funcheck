@@ -30,12 +30,18 @@ REPO_ADDR		= https://github.com/mord-tirith/funcheck.git
 #  ▌ ▙▌▐▖▙▖▄▌  #
 ################
 
-all: update install
+all: update
+	@if [ ! -f .funcheck_temp_flag ]; then \
+		$(MAKE) install; \
+	else \
+		rm -f .funcheck_temp_flag; \
+	fi
 
-install: alias
+install:
 	mkdir -p $(INSTALL_DIR)
 	cp funcheck.sh $(INSTALL_DIR)/funcheck.sh
 	cp -r configs $(INSTALL_DIR)/configs
+	alias
 
 alias:
 	@grep -qxF "alias funcheck='$(INSTALL_DIR)/funcheck.sh'" $(SHELL_RC) || \
@@ -46,12 +52,18 @@ update:
 		if git remote get-url origin 2>/dev/null | grep -q "mord-tirith/funcheck"; then \
 			git pull; \
 		else \
-			rm -rf .funcheck_temp; \
-			git clone $(REPO_ADDR) .funcheck_temp; \
-			$$(MAKE) -C .funcheck_temp install; \
-			rm -rf .funcheck_temp; \
-			exit 0; \
+			$(MAKE) temp_install; \
 		fi; \
 	else \
-		git clone $(REPO_ADDR) .; \
+		if [ -z "$$(ls -A .)" ]; then \
+			git clone $(REPO_ADDR) .; \
+		else \
+			$(MAKE) temp_install; \
 	fi
+
+temp_install:
+	@rm -rf .funcheck_temp
+	@git clone $(REPO_ADDR) .funcheck_temp
+	$(MAKE) -C .funcheck_temp install
+	@rm -rf .funcheck_temp
+	@touch .funcheck_temp_flag
