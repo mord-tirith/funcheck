@@ -75,7 +75,7 @@ for func in $USED; do
     if echo "$MLX_IGNORE" | grep -qx "$func"; then
       continue
     elif echo "$MLX_WARNING" | grep -qx "$func" && ! echo "$ALLOWED" | grep -qx "$func"; then
-      echo "${YELLOW}⚠️ Warning: $func found. If the use of $func is not interal to MLX, this is a forbidden function!"
+      echo "${YELLOW}⚠️ Warning: $func found. If the use of $func is not internal to MLX, this is a forbidden function!"
       continue
     fi
   fi

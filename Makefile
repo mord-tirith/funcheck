@@ -16,6 +16,7 @@ endif
 
 INSTALL_DIR = $(HOME)/.funcheck
 REPO_ADDR		= https://github.com/mord-tirith/funcheck.git
+MAKEFLAGS += --no-print-directory
 
 ####################
 #      ▜   ▗ ▗     #
@@ -39,16 +40,16 @@ all: update
 	fi
 
 install:
-	mkdir -p $(INSTALL_DIR)
-	cp funcheck.sh $(INSTALL_DIR)/funcheck.sh
-	cp -r configs $(INSTALL_DIR)/configs
-	
+	@mkdir -p $(INSTALL_DIR)
+	@cp funcheck.sh $(INSTALL_DIR)/funcheck.sh
+	@cp -r configs $(INSTALL_DIR)
+
 alias:
 	@grep -qxF "alias funcheck='$(INSTALL_DIR)/funcheck.sh'" $(SHELL_RC) || \
 	echo "alias funcheck='$(INSTALL_DIR)/funcheck.sh'" >> $(SHELL_RC)
 
 update:
-	if [ -d .git ]; then \
+	@if [ -d .git ]; then \
 		if git remote get-url origin 2>/dev/null | grep -q "mord-tirith/funcheck"; then \
 			git pull; \
 		else \
