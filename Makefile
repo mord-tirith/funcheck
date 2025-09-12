@@ -33,6 +33,7 @@ REPO_ADDR		= https://github.com/mord-tirith/funcheck.git
 all: update
 	@if [ ! -f .funcheck_temp_flag ]; then \
 		$(MAKE) install; \
+		$(MAKE) alias; \
 	else \
 		rm -f .funcheck_temp_flag; \
 	fi
@@ -41,8 +42,7 @@ install:
 	mkdir -p $(INSTALL_DIR)
 	cp funcheck.sh $(INSTALL_DIR)/funcheck.sh
 	cp -r configs $(INSTALL_DIR)/configs
-	alias
-
+	
 alias:
 	@grep -qxF "alias funcheck='$(INSTALL_DIR)/funcheck.sh'" $(SHELL_RC) || \
 	echo "alias funcheck='$(INSTALL_DIR)/funcheck.sh'" >> $(SHELL_RC)
@@ -59,11 +59,13 @@ update:
 			git clone $(REPO_ADDR) .; \
 		else \
 			$(MAKE) temp_install; \
+		fi; \
 	fi
 
 temp_install:
 	@rm -rf .funcheck_temp
 	@git clone $(REPO_ADDR) .funcheck_temp
-	$(MAKE) -C .funcheck_temp install
+	$(MAKE) -C .funcheck_temp install SHELL_RC=$(SHELL_RC) INSTALL_DIR=$(INSTALL_DIR)
+	$(MAKE) -C .funcheck_temp alias SHELL_RC=$(SHELL_RC) INSTALL_DIR=$(INSTALL_DIR)
 	@rm -rf .funcheck_temp
 	@touch .funcheck_temp_flag
