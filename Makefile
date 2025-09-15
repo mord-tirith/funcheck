@@ -89,7 +89,7 @@ update-check:
 			fi; \
 		else \
 			echo "${RED}Update system not in place, setting it up now${RESET}"; \
-			$(MAKE) update-files; \
+			$(MAKE) -C $(CURDIR) update-files; \
 		fi; \
 		rm -rf $(TEMP_DIR); \
 	else \
