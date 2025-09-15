@@ -74,7 +74,8 @@ fresh-install:
 
 update-check: 
 	@git clone $(REPO_URL) $(TEMP_DIR) 2>/dev/null || true
-	@if [ -d "$(TEMP_DIR)" ]; then \
+	@UPDATE_FLAG=0; \
+	if [ -d "$(TEMP_DIR)" ]; then \
 		cd $(INSTALL_DIR) && git init -q 2>/dev/null || true; \
 		cd $(INSTALL_DIR) && git remote add origin $(REPO_URL) 2>/dev/null || true; \
 		cd $(INSTALL_DIR) && git fetch origin main -q 2>/dev/null || true; \
@@ -83,17 +84,20 @@ update-check:
 			REMOTE_HASH=$$(cd $(TEMP_DIR) && git rev-parse HEAD 2>/dev/null || echo "none"); \
 			if [ "$$LOCAL_HASH" != "$$REMOTE_HASH" ]; then \
 				echo "${YELLOW}Updates detected, updating files now${RESET}"; \
-				$(MAKE) update-files; \
+				UPDATE_FLAG=1; \
 			else \
 				echo "${YELLOW}Already up to date${RESET}"; \
 			fi; \
 		else \
 			echo "${RED}Update system not in place, setting it up now${RESET}"; \
-			$(MAKE) -C $(CURDIR) update-files; \
+			UPDATE_FLAG=1; \
 		fi; \
 		rm -rf $(TEMP_DIR); \
 	else \
 		echo "${RED}Update process failed to check${RESET}"; \
+	fi; \
+	if [ $$UPDATE_FLAG -eq 1 ]; then \
+		$(MAKE) -C $(CURDIR) update-files; \
 	fi
 
 update-files:
