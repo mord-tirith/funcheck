@@ -54,7 +54,7 @@ install: check-updates setup-alias
 	@echo "${GREEN}Run ${YELLOW}'source $(SHELL_RC)' ${GREEN}or restart terminal to use funcheck${RESET}"
 
 check-updates:
-	@echo "${YELLOW}Checking for updates..."
+	@echo "${YELLOW}Checking for updates...${RESET}"
 	@if [ ! -d "$(INSTALL_DIR)" ]; then \
 		$(MAKE) fresh-install; \
 	else \
@@ -110,6 +110,7 @@ update-files:
 	@echo "${GREEN}funcheck updated${RESET}"
 
 setup-alias:
+	@echo "${CYAN}Detected shell config: $(SHELL_RC)${RESET}"
 	@if ! grep -q "alias funcheck=" $(SHELL_RC) 2>/dev/null; then \
 		echo "" >> $(SHELL_RC); \
 		echo "# 42 projects function checker (funcheck) alias" >> $(SHELL_RC); \
