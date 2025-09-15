@@ -13,3 +13,8 @@ For 42 School projects, so long as the file's name matches the mandatory name of
 
 E.g.:
 `funcheck philo_bonus` will automatically use the list of allowed functions for the bonus version of the Philosophers project. However, if your binary is named something like `a.out`, you'll need to provide the list on your own.
+
+### TODO list:
+
+1 - finish adding projects of Milestone 5
+2 - implement check for library projects instead of program projects (libft, ft_printf etc.)
