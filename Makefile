@@ -45,9 +45,11 @@ RESET		:= $(shell tput sgr0)
 #  ▌ ▙▌▐▖▙▖▄▌  #
 ################
 
+.PHONY: all install check-updates fresh-install update-check update-files setup-alias force-update clean update
+
 all: install
 
-intall: check-updates setup-alias
+install: check-updates setup-alias
 	@echo "${GREEN}funcheck installation complete!${RESET}"
 	@echo "${GREEN}Run ${YELLOW}'source $(SHELL_RC)' ${GREEN}or restart terminal to use funcheck${RESET}"
 
@@ -103,7 +105,7 @@ update-files:
 	@cd $(INSTALL_DIR) && git init -q 2>/dev/null || true
 	@cd $(INSTALL_DIR) && git remote remove origin 2>/dev/null || true
 	@cd $(INSTALL_DIR) && git remote add origin $(REPO_URL) 2>/dev/null || true
-	@cd $(INSTALL_DIR) && git add . && git commit -m "Newest vesion updated" -q 2>/dev/null || true
+	@cd $(INSTALL_DIR) && git add . && git commit -m "Newest version updated" -q 2>/dev/null || true
 	@rm -rf $(TEMP_DIR)
 	@echo "${GREEN}funcheck updated${RESET}"
 
@@ -112,7 +114,7 @@ setup-alias:
 		echo "" >> $(SHELL_RC); \
 		echo "# 42 projects function checker (funcheck) alias" >> $(SHELL_RC); \
 		echo "$(ALIAS_LINE)" >> $(SHELL_RC); \
-		echo "${GREEN}Alias funcheck installed to $(SHELL_RC)"${RESET}; \
+		echo "${GREEN}Alias funcheck installed to $(SHELL_RC)${RESET}"; \
 	else \
 		echo "${YELLOW}Alias funcheck already installed${RESET}"; \
 	fi
